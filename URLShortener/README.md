@@ -1,59 +1,179 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Assignment : 04
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+### Name : Md. Muhibbur Rahman
 
-## About Laravel
+### Email: muhib2929@gmail.com
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+<br>
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+# URL Shortener API
 
-## Learning Laravel
+A fully functional **URL Shortener** built with **Laravel** and **Sanctum API authentication**, designed to safely create, manage, and track short URLs. The project is secure, stable, and IDOR-safe with proper policies applied.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+---
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Table of Contents
 
-## Laravel Sponsors
+- [Features](#features)
+- [Technologies Used](#technologies-used)
+- [Setup & Installation](#setup--installation)
+- [API Endpoints](#api-endpoints)
+- [IDOR & Security](#idor--security)
+- [Validation & Error Handling](#validation--error-handling)
+- [Stability](#stability)
+- [License](#license)
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+---
 
-### Premium Partners
+## Features
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+- **User Authentication**
+    - Register, Login, Logout
+    - Sanctum API token authentication
+- **User Management**
+    - View profile
+    - Update name & email
+    - Delete account
+- **URL Management**
+    - Create, List, View, Update, Delete URLs
+    - Auto-generated 6-character short codes
+    - Default 7-day expiry with optional custom expiry
+    - Click tracking for each URL
+- **Public Redirection**
+    - Redirect using `/{short_code}`
+    - Increment click count
+    - Handles expired URLs (410) and non-existing URLs (404)
+- **Security**
+    - IDOR prevention using Laravel Policies
+    - Validation on all requests (URL format, email uniqueness, password confirmation)
+- **Relationships**
+    - Each URL belongs to a user
+    - Users can have multiple URLs
 
-## Contributing
+---
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## Technologies Used
 
-## Code of Conduct
+- **Backend:** Laravel 12, PHP 8+
+- **Authentication:** Laravel Sanctum
+- **Database:** MySQL
+- **API Testing:** Postman / Any REST client
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+---
 
-## Security Vulnerabilities
+## Setup & Installation
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+1. Clone the repository
 
-## License
+```bash
+git clone -b main https://github.com/Muhib68442/URLShortener.git
+cd URLShortener
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+2.  Install dependencies
+
+```bash
+composer install
+cp .env.example .env
+php artisan key:generate
+```
+
+3. Configure `.env`
+
+```bash
+APP_NAME=URLShortener
+APP_URL=http://localhost
+
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=url_shortener
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+4. Run Migration
+
+```bash
+php artisan migrate
+```
+
+5. Start
+
+```bash
+php artisan serve
+```
+
+## API Endpoints
+
+### User Authentication
+
+| Method | Endpoint  | Description       |
+| ------ | --------- | ----------------- |
+| POST   | /register | Register new user |
+| POST   | /login    | Login user        |
+| GET    | /logout   | Logout user       |
+| GET    | /check    | Check auth status |
+
+### User Management
+
+| Method | Endpoint | Description       |
+| ------ | -------- | ----------------- |
+| GET    | /user    | View profile      |
+| PATCH  | /user    | Update name/email |
+| DELETE | /user    | Delete account    |
+
+### URL Management
+
+| Method | Endpoint           | Description                         |
+| ------ | ------------------ | ----------------------------------- |
+| POST   | /urls              | Create new URL                      |
+| GET    | /urls              | List all URLs of logged-in user     |
+| GET    | /urls/{short_code} | View single URL details (IDOR-safe) |
+| PATCH  | /urls/{short_code} | Update URL or expiry (IDOR-safe)    |
+| DELETE | /urls/{short_code} | Delete URL (IDOR-safe)              |
+
+### Public Redirection
+
+| Method | Endpoint      | Description                                       |
+| ------ | ------------- | ------------------------------------------------- |
+| GET    | /{short_code} | Redirect to original URL (increments click count) |
+
+#### Redirection Rules:
+
+- Exists → 302 redirect
+- Expired → 410 Gone
+- Not found → 404 Not Found
+
+> Note: Please find a Postman Collection in the project root directory in JSON format that might help you test the API.
+
+#### IDOR & Security
+
+- Laravel Policies prevent users from accessing or modifying URLs they do not own.
+- Applied policy: UrlPolicy@manage on view, update, delete operations.
+- Public redirect does not require authentication but handles expiration and non-existent URLs safely.
+
+#### Validation & Error Handling
+
+- Email: Must be unique during registration
+- Password: Minimum 8 characters & confirmed
+- URL: Must be valid format
+- Expiry: Must be valid date (YYYY-MM-DD HH:MM:SS)
+- Responses: Proper HTTP status codes (200, 201, 204, 401, 404, 410, 422)
+
+#### Stability
+
+- Fully tested CRUD operations on URLs
+- Safe redirection with click tracking
+- Policies ensure no IDOR attacks
+- Handles all edge cases (non-existent, expired URLs, invalid inputs)
+- Uses proper Laravel relationships (User -> Url)
+- Secure token-based authentication with Laravel Sanctum
+
+#### License
+
+- This project is open-source and free to use for learning and personal projects.
+
+> Note: All operations requiring authentication use Sanctum tokens. Public access is limited to redirection only.
