@@ -9,50 +9,53 @@ use Illuminate\Support\Facades\Hash;
 class AuthController extends Controller
 {
     // REGISTER [GET]
-    public function register()
-    {
-        return response()->json(['message' => 'Welcome to URLShortener. Please Register with name, email and password'], 200);
-    }
+    // public function register()
+    // {
+    //     return response()->json(['message' => 'Welcome to URLShortener. Please Register with name, email and password'], 200);
+    // }
 
     // REGISTER [POST]
-    public function register_post(Request $request)
+    public function register(Request $request)
     {
 
-        $request->validate([
-            'name' => 'required',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|min:8|confirmed',
-        ]);
+        try {
+            $request->validate([
+                'name' => 'required',
+                'email' => 'required|email|unique:users,email',
+                'password' => 'required|min:8|confirmed',
+            ]);
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
 
-        // GENERATE TOKEN 
-        $token = $user->createToken('auth_token')->plainTextToken;
+            $user = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+            ]);
 
-        \Log::info('User Registered Successfully', []);
+            // GENERATE TOKEN 
+            $token = $user->createToken('auth_token')->plainTextToken;
 
-        if ($user && $token) {
             return response()->json([
                 'message' => 'User registered successfully',
                 'token' => $token
             ], 201);
-        } else {
-            return response()->json(['message' => 'Something went wrong. Please try again.'], 500);
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'message' => 'Something went wrong! Please try again.',
+                'errors' => $e->errors()
+            ], 422);
         }
     }
 
     // LOGIN [GET]
-    public function login()
-    {
-        return response()->json(['message' => 'Welcome to URLShortener. Please Login with email and password'], 200);
-    }
+    // public function login()
+    // {
+    //     return response()->json(['message' => 'Welcome to URLShortener. Please Login with email and password'], 200);
+    // }
 
     // LOGIN [POST] 
-    public function login_post(Request $request)
+    public function login(Request $request)
     {
         $request->validate([
             'email' => 'required|email',
@@ -79,7 +82,12 @@ class AuthController extends Controller
     // CHECK [GET]
     public function check(Request $request)
     {
-        return response()->json(['message' => 'Authenticated', 'token' => $request->bearerToken()], 200);
+        return response()->json([
+            'message' => 'Authenticated',
+            'token' => $request->bearerToken(),
+            'name' => auth()->user()->name,
+            'email' => auth()->user()->email
+        ], 200);
     }
 
     // LOGOUT [GET]

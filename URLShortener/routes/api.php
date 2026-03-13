@@ -7,14 +7,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 //////////////////////////////////////////
 
-
 // REGISTER 
-Route::get('/register', [AuthController::class, 'register']);
-Route::post('/register', [AuthController::class, 'register_post']);
+// Route::get('/register', [AuthController::class, 'register']);
+Route::post('/register', [AuthController::class, 'register']);
 
 // LOGIN 
-Route::get('/login', [AuthController::class, 'login']);
-Route::post('/login', [AuthController::class, 'login_post']);
+// Route::get('/login', [AuthController::class, 'login']);
+Route::post('/login', [AuthController::class, 'login']);
 
 // PUBLIC REDIRECTION ENDPOINT (Used in Web.php)
 // Route::get('/{short_code}', [UrlController::class, 'redirect']);
@@ -40,8 +39,5 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::patch('/urls/{url}', [UrlController::class, 'update_url']);
     Route::delete('/urls/{url}', [UrlController::class, 'delete_url']);
 
-
-
-    // NOTE : /{url} IDOR issue possible
 });
 // ============================= AUTH MIDDLEWARE ENDS HERE ================================================================>

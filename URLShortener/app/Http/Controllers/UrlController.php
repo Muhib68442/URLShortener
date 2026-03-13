@@ -4,9 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\Url;
 use Illuminate\Http\Request;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class UrlController extends Controller
 {
+
+    use AuthorizesRequests;
 
     // REDIRECT 
     public function redirect($short_code)
@@ -66,12 +69,15 @@ class UrlController extends Controller
     // VIEW URL [GET]
     public function view_url($url)
     {
-        $url = Url::where('short_code', $url)->where('user_id', auth()->user()->id)->first();
+        $url = Url::where('short_code', $url)->first();
         if (!$url) {
             return response()->json([
                 'message' => 'URL not found',
             ]);
         }
+
+        // IDOR Prevention
+        $this->authorize('manage', $url);
 
         return response()->json([
             'message' => 'URL details',
@@ -93,12 +99,15 @@ class UrlController extends Controller
             'expires_at' => 'sometimes|required|date'
         ]);
 
-        $url = Url::where('short_code', $url)->where('user_id', auth()->user()->id)->first();
+        $url = Url::where('short_code', $url)->first();
         if (!$url) {
             return response()->json([
                 'message' => 'URL not found',
             ], 404);
         }
+
+        // IDOR Prevention
+        $this->authorize('manage', $url);
 
         if ($request->has('original_url')) {
             $url->original_url = $request->original_url;
@@ -120,12 +129,15 @@ class UrlController extends Controller
     // DELETE URL [DELETE]
     public function delete_url($url)
     {
-        $url = Url::where('short_code', $url)->where('user_id', auth()->user()->id)->first();
+        $url = Url::where('short_code', $url)->first();
         if (!$url) {
             return response()->json([
                 'message' => 'URL not found',
             ], 404);
         }
+
+        // IDOR Prevention
+        $this->authorize('manage', $url);
 
         $url->delete();
         return response()->json([

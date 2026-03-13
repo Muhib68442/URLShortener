@@ -1,0 +1,575 @@
+{
+  "info": {
+    "_postman_id": "bac6b2fe-0b9b-4712-b7a2-3d00ed879f86",
+    "name": "URL Shortener",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "47856245",
+    "_collection_link": "https://go.postman.co/collection/47856245-bac6b2fe-0b9b-4712-b7a2-3d00ed879f86?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"Md. Muhibbur Rahman\",\r\n    \"email\": \"muhib2929@gmail.com\",\r\n    \"password\": \"1710212514\",\r\n    \"password_confirmation\": \"1710212514\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/api/register",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "register"
+              ]
+            },
+            "description": "## Register a New User\n\nRegisters a new user account in the system. On success, returns an authentication token that can be used for subsequent authenticated requests.\n\n**Endpoint:** `POST {{url}}/api/register`\n\n---\n\n## Request Body\n\nThe request body must be sent as **JSON** (`application/json`).\n\n| Field | Type | Required | Description |\n| --- | --- | --- | --- |\n| `name` | `string` | ✅ Yes | Full name of the user being registered. |\n| `email` | `string` | ✅ Yes | A valid, unique email address for the user account. |\n| `password` | `string` | ✅ Yes | The desired password for the account. |\n| `password_confirmation` | `string` | ✅ Yes | Must match the `password` field exactly for validation. |\n\n**Example Request Body:**\n\n``` json\n{\n  \"name\": \"Md. Muhibbur Rahman\",\n  \"email\": \"muhib2929@gmail.com\",\n  \"password\": \"1710212514\",\n  \"password_confirmation\": \"1710212514\"\n}\n\n ```\n\n---\n\n## Responses\n\n### ✅ 201 Created — Registration Successful\n\nReturned when the user is successfully registered. The response includes a bearer token for immediate authentication.\n\n``` json\n{\n  \"message\": \"User registered successfully\",\n  \"token\": \"1|IcIrcAE1OtvZgglsf3U8dTZWwMjLywIO7KzhA3...\"\n}\n\n ```\n\n| Field | Type | Description |\n| --- | --- | --- |\n| `message` | `string` | A confirmation message indicating successful registration. |\n| `token` | `string` | A bearer token to authenticate future API requests. Use this in the `Authorization` header as `Bearer {{token}}`. |"
+          },
+          "response": []
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\" : \"muhib2929@gmail.com\",\r\n    \"password\" : \"1710212514\"\r\n} ",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/api/login",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "login"
+              ]
+            },
+            "description": "## Login\n\nAuthenticates a user and returns a bearer token to be used for subsequent authenticated requests.\n\n---\n\n### Request\n\n**Method:** `POST`  \n**URL:** `{{url}}/api/login`\n\n#### Request Body (JSON)\n\n| Field      | Type   | Required | Description                        |\n|------------|--------|----------|------------------------------------|\n| `email`    | string | ✅ Yes   | The registered email of the user.  |\n| `password` | string | ✅ Yes   | The account password of the user.  |\n\n**Example:**\n```json\n{\n  \"email\": \"user@example.com\",\n  \"password\": \"yourpassword\"\n}\n```\n\n---\n\n### Response\n\n**Status:** `200 OK`\n\nOn success, the API returns a confirmation message along with a bearer token.\n\n```json\n{\n  \"message\": \"User logged in successfully\",\n  \"token\": \"<bearer_token>\"\n}\n```\n\n| Field     | Type   | Description                                                  |\n|-----------|--------|--------------------------------------------------------------|\n| `message` | string | A success message confirming the user has been logged in.    |\n| `token`   | string | Bearer token to be used in the `Authorization` header for authenticated requests. |\n\n**Usage of token:**\n```\nAuthorization: Bearer <token>\n```\n"
+          },
+          "response": []
+        },
+        {
+          "name": "Check Auth Status",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/api/check",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "check"
+              ]
+            },
+            "description": "## Check Auth Status\n\nThis endpoint verifies whether the current user is authenticated. It is useful for checking the validity of an active session or bearer token before making other authenticated API calls.\n\n---\n\n### Method & URL\n\n```\nGET {{url}}/api/check\n```\n\n---\n\n### Headers\n\n| Key | Value | Required |\n|-----|-------|----------|\n| `Accept` | `application/json` | ✅ Yes |\n| `Authorization` | `Bearer {{auth_token}}` | ✅ Yes |\n\n---\n\n### Authentication\n\nThis endpoint **requires a valid Bearer token**. The token should be obtained from the [Login](#) endpoint and passed in the `Authorization` header as:\n\n```\nAuthorization: Bearer {{auth_token}}\n```\n\nIf no token is provided, or the token is invalid/expired, the API will return a `401 Unauthenticated` response.\n\n---\n\n### Example Responses\n\n#### ✅ 200 OK — Authenticated\n\n```json\n{\n  \"message\": \"Authenticated.\",\n  \"user\": {\n    \"id\": 1,\n    \"name\": \"John Doe\",\n    \"email\": \"john@example.com\"\n  }\n}\n```\n\n#### ❌ 401 Unauthorized — Unauthenticated\n\nReturned when no valid auth token is present in the request.\n\n```json\n{\n  \"message\": \"Unauthenticated.\"\n}\n```"
+          },
+          "response": []
+        },
+        {
+          "name": "Logout",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{url}}/api/logout",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "logout"
+              ]
+            },
+            "description": "## Logout\n\nLogs out the currently authenticated user by invalidating their active session or token on the server side. Once this endpoint is called successfully, the token can no longer be used for authenticated requests.\n\n---\n\n### Request Details\n\n| Property | Value |\n| --- | --- |\n| **Method** | `GET` |\n| **URL** | `{{url}}/api/logout` |\n\n---\n\n### Headers\n\n| Key | Value | Description |\n| --- | --- | --- |\n| `Accept` | `application/json` | Indicates that the client expects a JSON response |\n\n---\n\n### Variables\n\n| Variable | Description |\n| --- | --- |\n| `{{url}}` | The base URL of the API (e.g., `https://api.example.com`) |\n| `{{token}}` | The authentication token of the currently logged-in user |\n\n---\n\n### Expected Behavior\n\n- **On success:** The server invalidates the user's current session/token. Any subsequent requests using the same token will be rejected with an authentication error (e.g., `401 Unauthorized`).\n    \n- **On failure:** Returns an appropriate error response if the token is already invalid, expired, or missing.\n    \n\n---\n\n### Notes\n\n- Make sure the `{{token}}` variable is set in your active environment before sending this request.\n    \n- After a successful logout, clear or update the `{{token}}` variable to avoid accidentally reusing an invalidated token."
+          },
+          "response": []
+        }
+      ],
+      "description": "Handles User Authentication\n\nRegister, Login, Logout and Check status"
+    },
+    {
+      "name": "Profile",
+      "item": [
+        {
+          "name": "View Profile",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/api/user",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "user"
+              ]
+            },
+            "description": "## View Profile\n\nRetrieves the authenticated user's profile details, including their name and email address.\n\n**Endpoint:** `GET {{url}}/api/user`\n\n- **`{{url}}`** — The base URL of the API server. Set this variable in your active environment.\n    \n\n---\n\n### Authentication\n\nThis request requires a valid Bearer token. Pass the token using the `{{token}}` variable in the `Authorization` header:\n\n```\nAuthorization: Bearer {{token}}\n\n ```\n\n---\n\n### Request Headers\n\n| Header | Value |\n| --- | --- |\n| `Accept` | `application/json` |\n\n---\n\n### Response\n\n**Status:** `200 OK`\n\nReturns a JSON object with the authenticated user's profile information.\n\n``` json\n{\n  \"message\": \"User details\",\n  \"name\": \"Someone\",\n  \"email\": \"0@0.0\"\n}\n\n ```\n\n| Field | Type | Description |\n| --- | --- | --- |\n| `message` | string | A status message for the response |\n| `name` | string | The authenticated user's full name |\n| `email` | string | The authenticated user's email |"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Profile",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\" : \"Test Account 00\",\r\n    \"email\" : \"muhib2929@gmail.com\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/api/user",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "user"
+              ]
+            },
+            "description": "## Update User Profile\n\nUpdates the authenticated user's profile information, specifically their **name** and **email address**.\n\n---\n\n### Endpoint\n\n`PATCH {{url}}/api/user`\n\n---\n\n### Request Body\n\nSend a JSON object with the fields you want to update:\n\n| Field   | Type   | Required | Description                        |\n|---------|--------|----------|------------------------------------|\n| `name`  | string | Yes      | The new display name of the user   |\n| `email` | string | Yes      | The new email address of the user  |\n\n**Example:**\n```json\n{\n  \"name\": \"Someone\",\n  \"email\": \"user@example.com\"\n}\n```\n\n---\n\n### Response\n\n#### `200 OK` — Profile updated successfully\n\n```json\n{\n  \"message\": \"User details updated successfully\",\n  \"name\": \"Someone\",\n  \"email\": \"user@example.com\"\n}\n```\n\n| Field     | Type   | Description                          |\n|-----------|--------|--------------------------------------|\n| `message` | string | Confirmation message                 |\n| `name`    | string | The updated name of the user         |\n| `email`   | string | The updated email address of the user|\n"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Profile",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/api/user",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "user"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "URL",
+      "item": [
+        {
+          "name": "List URL",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{url}}/api/urls",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "urls"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create URL",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"original_url\" : \"https://google.com\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/api/urls",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "urls"
+              ]
+            },
+            "description": "## Create Short URL\n\nThis endpoint allows users to create a short URL from a provided original URL.\n\n### Request\n\n- **Method**: POST\n    \n- **Endpoint**: `{{url}}/api/urls`\n    \n- **Request Body**: The request should contain a JSON object with the following parameter:\n    \n    - `original_url` (string): The original URL that you want to shorten.\n        \n\n#### Example Request Body\n\n``` json\n{\n  \"original_url\": \"https://facebook.com\"\n}\n\n ```\n\n### Response\n\nUpon a successful request, the server will respond with a `201 Created` status and a JSON object containing the following fields:\n\n- `message`: A string that may contain additional information about the request (typically empty).\n    \n- `url`: An object with details about the created short URL:\n    \n    - `user_id` (integer): The ID of the user who created the URL.\n        \n    - `original_url` (string): The original URL provided in the request.\n        \n    - `expires_at` (string): The expiration date of the short URL, if applicable.\n        \n    - `short_code` (string): The generated short code for the URL.\n        \n    - `updated_at` (string): The timestamp when the URL was last updated.\n        \n    - `created_at` (string): The timestamp when the URL was created.\n        \n    - `id` (integer): The unique identifier for the created URL.\n        \n- `url_registered_with`: A string indicating where the URL is registered (may be empty).\n    \n\n#### Example Response\n\n``` json\n{\n  \"message\": \"\",\n  \"url\": {\n    \"user_id\": 0,\n    \"original_url\": \"\",\n    \"expires_at\": \"\",\n    \"short_code\": \"\",\n    \"updated_at\": \"\",\n    \"created_at\": \"\",\n    \"id\": 0\n  },\n  \"url_registered_with\": \"\"\n}\n\n ```\n\nThis response format provides all necessary details about the newly created short URL, allowing users to track and manage their shortened links effectively."
+          },
+          "response": []
+        },
+        {
+          "name": "View URL",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/api/urls/edOUgA",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "urls",
+                "edOUgA"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update URL",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"original_url\" : \"https://muhib68442.github.io/Portfolio\",\r\n    \"expires_at\" : \"2027-03-23 10:00:00\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/api/urls/uLe1Nv",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "urls",
+                "uLe1Nv"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete URL",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url}}/api/urls/uLe1Nv",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "api",
+                "urls",
+                "uLe1Nv"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Redirect",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text",
+                "disabled": true
+              }
+            ],
+            "url": {
+              "raw": "{{url}}/edOUgA",
+              "host": [
+                "{{url}}"
+              ],
+              "path": [
+                "edOUgA"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "url",
+      "value": ""
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "default"
+    }
+  ]
+}
